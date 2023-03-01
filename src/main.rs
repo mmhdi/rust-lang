@@ -1,8 +1,8 @@
 use tokio;
-use axum::{extract::Multipart, routing::get, response::Response, Router};
+use axum::{extract::Multipart, routing::post, routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
-use mongodb::{options::ClientOptions, Client};
+use mongodb::{bson::doc, options::ClientOptions, Client};
 
 #[tokio::main]
 async fn main() {
@@ -40,10 +40,10 @@ async fn signin_form()-> axum::response::Response<String> {
 	let data = parse_multipart(multipart).await;
 	let ac = data.get("ac");
 	let aac = db.find_one(doc!{"un": },None).await?;
+	let mut context = Context::new();
 	if ac == aac.get("un"){
 		context.insert("ac", &ac);
 	}
-	let mut context = Context::new();
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
