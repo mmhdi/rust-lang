@@ -37,10 +37,9 @@ async fn signin()-> axum::response::Response<String> {
 struct Signin {
     ac: String,
 }
-async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
+async fn signin_form(Form(signin): Form<Signin>)->Result<ClientOptions, mongodb::error::Error>, axum::response::Response<String> {
 	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await);
 	let db = client.database("braq").collection("users");
-	let data = parse_multipart(Multipart).await;
 	let ac = signin.ac;
 	let aac = db.find_one(doc!{"un": ac},None).await;
 	let mut context = Context::new();
