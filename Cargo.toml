@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-axum = { version = "0.6", features = ["full"] }
+axum = { version = "0.6", features = ["multipart"] }
 tera = "1"
 tower-http = { version = "0.4.0", features = ["full"] }
 mongodb = "2.3"
