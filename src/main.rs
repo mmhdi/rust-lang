@@ -35,11 +35,11 @@ async fn signin()-> axum::response::Response<String> {
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
 async fn signin_form()-> axum::response::Response<String> {
-	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
+	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/retryWrites=true&w=majority").await);
 	let db = client.database("braq").collection("users");
-	let data = parse_multipart(multipart).await;
+	let data = parse_multipart(Multipart).await;
 	let ac = data.get("ac");
-	let aac = db.find_one(doc!{"un": ac},None).await?;
+	let aac = db.find_one(doc!{"un": ac},None).await;
 	let mut context = Context::new();
 	if ac == aac.get("un"){
 		context.insert("ac", &ac);
