@@ -3,4 +3,4 @@ WORKDIR /usr/src/hello
 COPY . .
 RUN cargo install --path .
 
-CMD ["hello"]
+CMD ["target/release/hello"]
