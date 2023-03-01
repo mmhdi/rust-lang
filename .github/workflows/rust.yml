@@ -16,9 +16,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
-    - run: ls
-    
+      run: |
+        cargo run
+        
+
     - name: Commit report
       run: |
         git config --global user.name 'Mustafa Mahdi'
