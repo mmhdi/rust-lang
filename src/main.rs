@@ -2,7 +2,7 @@ use tokio;
 use axum::{routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
-//use mongodb::{options::ClientOptions, Client};
+use mongodb::{options::ClientOptions, Client};
 
 #[tokio::main]
 async fn main() {
@@ -35,7 +35,7 @@ async fn signin()-> axum::response::Response<String> {
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
 async fn signin_form()-> axum::response::Response<String> {
-	/*let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
+	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
 	let db = client.database("braq").collection("users");
 	let data = parse_multipart(multipart).await;
 	let ac = data.get("ac");
@@ -43,7 +43,6 @@ async fn signin_form()-> axum::response::Response<String> {
 	if ac == aac.get("un");
 		context.insert("ac", &ac);
 	}
-	*/
 	let mut context = Context::new();
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
