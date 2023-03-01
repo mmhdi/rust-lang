@@ -3,7 +3,4 @@ WORKDIR /usr/src/hello
 COPY . .
 RUN cargo install --path .
 
-FROM debian:buster-slim
-ARG APP=/usr/src/hello
-
-CMD ["hello"]
+CMD ["target/release/hello"]
