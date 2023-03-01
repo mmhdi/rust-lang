@@ -1,6 +1,14 @@
 FROM rust:1.67.1 as builder
-WORKDIR /usr/src/hello
+WORKDIR /app
 COPY . .
 RUN cargo install --path .
 
-CMD ["target/release/hello"]
+FROM debian:buster-slim as runner
+
+COPY --from=builder /usr/local/cargo/bin/rust-rocket-sample /usr/local/bin/rust-rocket-sample
+COPY --from=builder /app/.env .env
+COPY --from=builder /app/Rocket.toml Rocket.toml
+
+EXPOSE 8080
+
+CMD ["hello"]
