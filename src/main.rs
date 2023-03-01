@@ -40,7 +40,7 @@ async fn signin_form()-> axum::response::Response<String> {
 	let data = parse_multipart(multipart).await;
 	let ac = data.get("ac");
 	let aac = db.find_one(doc!{"un": },None).await?;
-	if ac == aac.get("un");
+	if ac == aac.get("un"){
 		context.insert("ac", &ac);
 	}
 	let mut context = Context::new();
