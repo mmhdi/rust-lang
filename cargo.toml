@@ -1,0 +1,18 @@
+[package]
+name = "hello"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+axum = "0.6"
+tera = "1"
+tower-http = { version = "0.4.0", features = ["full"] }
+#mongodb = "2.3"
+
+[profile.release]
+opt-level = "s"
+strip = true
+lto = true
+panic = "abort"
+codegen-units = 1
