@@ -6,4 +6,4 @@ RUN cargo install --path .
 FROM debian:buster-slim
 ARG APP=/usr/src/hello
 
-CMD ["target/release/hello"]
+CMD ["hello"]
