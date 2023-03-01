@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Multipart, routing::post, routing::get, response::Response, Router};
+use axum::{extract::Multipart, routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc, options::ClientOptions, Client};
@@ -39,7 +39,7 @@ async fn signin_form()-> axum::response::Response<String> {
 	let db = client.database("braq").collection("users");
 	let data = parse_multipart(multipart).await;
 	let ac = data.get("ac");
-	let aac = db.find_one(doc!{"un": },None).await?;
+	let aac = db.find_one(doc!{"un": ac},None).await?;
 	let mut context = Context::new();
 	if ac == aac.get("un"){
 		context.insert("ac", &ac);
