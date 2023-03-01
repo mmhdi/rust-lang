@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Multipart, routing::get, response::Response, Router};
+use axum::{extract::form, routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc, options::ClientOptions, Client};
@@ -34,11 +34,14 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-async fn signin_form()-> axum::response::Response<String> {
-	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/retryWrites=true&w=majority").await);
+struct Signin {
+    ac: String,
+}
+async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
+	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await);
 	let db = client.database("braq").collection("users");
 	let data = parse_multipart(Multipart).await;
-	let ac = data.get("ac");
+	let ac = signin.ac;
 	let aac = db.find_one(doc!{"un": ac},None).await;
 	let mut context = Context::new();
 	if ac == aac.get("un"){
