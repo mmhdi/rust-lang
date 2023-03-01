@@ -6,6 +6,6 @@ RUN cargo install --path .
 FROM debian:buster-slim as runner
 COPY --from=builder /usr/local/cargo/bin/rust-rocket-sample /usr/local/bin/rust-rocket-sample
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["hello"]
