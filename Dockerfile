@@ -4,7 +4,7 @@ COPY . .
 RUN cargo install --path .
 
 FROM debian:buster-slim as runner
-COPY --from=builder /usr/local/cargo/bin/rust-rocket-sample /usr/local/bin/rust-rocket-sample
+COPY --from=builder /usr/local/cargo/bin/hello /usr/local/bin/hello
 
 EXPOSE 3000
 
