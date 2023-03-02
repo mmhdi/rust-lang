@@ -37,12 +37,12 @@ async fn signin()-> axum::response::Response<String> {
 struct Signin {
     ac: String,
 }
-async fn ddbb(a:String) {
+async fn ddbb(a:String) -> Result{
 	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
 	let db = client.database("braq").collection("users");
 	let aac = db.insert_one(doc!{"un":a},None).await?;
 }
-async fn signin_form()-> axum::response::Response<String> {
+async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
 	let ac = signin.ac;
 	ddbb(ac);
 	let mut context = Context::new();
