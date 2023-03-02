@@ -34,13 +34,11 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-struct Signin {
-    ac: String,
-}
-async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
+
+async fn signin_form()-> axum::response::Response<String> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
-	db.insert_one(doc!{"un":signin},None).await;
+	db.insert_one(doc!{"un":"gg"},None).await;
 	let mut context = Context::new();
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
