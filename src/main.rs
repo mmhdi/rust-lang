@@ -37,14 +37,13 @@ async fn signin()-> axum::response::Response<String> {
 struct Signin {
     ac: String,
 }
-async fn ddbb(a:String) -> Result{
-	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
-	let db = client.database("braq").collection("users");
-	let aac = db.insert_one(doc!{"un":a},None).await?;
-}
+
 async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
 	let ac = signin.ac;
-	ddbb(ac);
+	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?)?;
+	let db = client.database("braq").collection("users");
+	let aac = db.insert_one(doc!{"un":ac},None).await?;
+
 	let mut context = Context::new();
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
