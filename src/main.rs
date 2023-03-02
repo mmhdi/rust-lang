@@ -42,7 +42,7 @@ async fn ddbb(a:String) {
 	let db = client.database("braq").collection("users");
 	let aac = db.insert_one(doc!{"un":a},None).await?;
 }
-async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
+async fn signin_form()-> axum::response::Response<String> {
 	let ac = signin.ac;
 	ddbb(ac);
 	let mut context = Context::new();
