@@ -41,7 +41,7 @@ struct Signin {
 async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
 	let ac = signin.ac;
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await;
-	let db = client.database("braq").collection("users");
+	let db = client.database("braq".as_str()).collection("users");
 	let aac = db.insert_one(doc!{"un":ac},None).await;
 	let mut context = Context::new();
 	let mut tera = Tera::default();
