@@ -39,9 +39,9 @@ struct Signin {
 }
 
 async fn ddbb(a:&str)-> Result<Client, mongodb::error::Error>{
-let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await;
+let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
 	let db = client.database("braq").collection("users");
-	db.insert_one(doc!{"un":a},None).await;
+	db.insert_one(doc!{"un":a},None).await?;
 	
 }
 async fn signin_form(Form(signin): Form<Signin>)-> axum::response::Response<String> {
