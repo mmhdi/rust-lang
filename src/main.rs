@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Form, routing::get, response::{IntoResponse, Response}, Router};
+use axum::{extract::Form, routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc, Client};
@@ -34,10 +34,10 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-pub struct CreateUser {
+struct CreateUser {
     ac: String,
 }
-pub async fn signin_form(Form(CreateUser): Form<CreateUser>)-> impl IntoResponse {
+async fn signin_form(Form(CreateUser): Form<CreateUser>)->Response{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
 	db.insert_one(doc!{"un":CreateUser.ac},None).await;
