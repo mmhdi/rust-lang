@@ -37,7 +37,7 @@ async fn signin()-> axum::response::Response<String> {
 struct CreateUser {
     ac: String,
 }
-#[debug_handler]
+#[debug]
 async fn signinform(Form(CreateUser): Form<CreateUser>){
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection("users");
