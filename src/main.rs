@@ -27,7 +27,7 @@ async fn index()-> axum::response::Response<String> {
         .body(tera.render("index", &Context::new()).unwrap()).unwrap()
 }
 
-async fn signin()-> impl Future<Output = Response<std::string::String>> {
+async fn signin()->impl axum::response::Response<String> {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
