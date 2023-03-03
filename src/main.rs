@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::{Extension, Multipart, Path}, routing::get, response::Response, Router};
+use axum::{extract::Form, routing::get, response::Response, Router};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc, Client};
@@ -27,19 +27,20 @@ async fn index()-> axum::response::Response<String> {
         .body(tera.render("index", &Context::new()).unwrap()).unwrap()
 }
 
-async fn signin()-> axum::response::Response<String> {
+async fn signin()-> impl Future<Output = Response<std::string::String>> {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-async fn signin_form(multipart: Multipart)->axum::response::Response<String>{
-	let data = parse_multipart(multipart)
-        .await;
+pub struct CreateUser {
+    pub ac: String,
+}
+pub async fn signin_form(Form(CreateUser): Form<CreateUser>)->axum::response::Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
-	db.insert_one(doc!{"un":data.get("ac")},None).await;
+	db.insert_one(doc!{"un":CreateUser.ac},None).await;
 	let mut context = Context::new();
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
