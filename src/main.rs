@@ -36,8 +36,7 @@ async fn signin()-> axum::response::Response<String> {
 }
 async fn signin_form(multipart: Multipart)->axum::response::Response<String>{
 	let data = parse_multipart(multipart)
-        .await
-        .map_err(|err| error_page(&err));
+        .await;
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
 	db.insert_one(doc!{"un":data.get("ac")},None).await;
