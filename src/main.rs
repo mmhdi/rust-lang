@@ -34,8 +34,8 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-pub struct CreateUser {
-    pub ac: String,
+struct CreateUser {
+    ac: String,
 }
 async fn signin_form(Form(CreateUser): Form<CreateUser>)-> axum::response::Response<String> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
