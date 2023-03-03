@@ -36,6 +36,7 @@ async fn signin()-> axum::response::Response<String> {
 }
 struct Input {
     user: String,
+    pass: String,
 }
 async fn handler(Form(input): Form<Input>)-> axum::response::Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
