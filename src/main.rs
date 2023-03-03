@@ -37,7 +37,7 @@ async fn signin()-> axum::response::Response<String> {
 pub struct CreateUser {
     pub ac: String,
 }
-async fn signin_form(Form(CreateUser): Form<CreateUser>,)-> impl IntoResponse {
+async fn signin_form(Form(CreateUser): Form<CreateUser>,)-> impl axum::response::Response<String> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
 	db.insert_one(doc!{"un":CreateUser.ac},None).await;
