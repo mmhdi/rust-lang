@@ -37,7 +37,7 @@ async fn signin()-> axum::response::Response<String> {
 }
 #[derive(Deserialize)]
 struct Login {
-    ac: String
+    ac: String,
     pw: String,
 }
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
