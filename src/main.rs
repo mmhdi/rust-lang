@@ -9,7 +9,7 @@ async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
-		.route("/signin/", get(signin).post(signinform))
+		.route("/signin/", get(signin).post(handler))
 		.route("/signup/", get(signup).post(signup_form))
 		.route("/confirm/email/", get(confirm_email).post(confirm_email_form))
 		.route("/confirm/email/verify/", get(confirm_email_verify).post(confirm_email_verify_form))
@@ -37,8 +37,8 @@ async fn signin()-> axum::response::Response<String> {
 struct CreateUser {
     ac: String,
 }
-#[debug_signinform(Form(CreateUser): Form<CreateUser>)]
-async fn signinform(Form(CreateUser): Form<CreateUser>){
+#[debug_handler]
+async fn handler(Form(CreateUser): Form<CreateUser>){
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection("users");
 	db.insert_one(doc!{"un":CreateUser.ac},None).await.unwrap();
