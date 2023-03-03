@@ -34,8 +34,6 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-#[derive(Deserialize, Debug)]
-#[allow(dead_code)]
 async struct CreateUser {
     ac: String,
 }
