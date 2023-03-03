@@ -36,7 +36,7 @@ async fn signin()-> axum::response::Response<String> {
 }
 #[derive(Deserialize, Debug)]
 #[allow(dead_code)]
-struct CreateUser {
+async struct CreateUser {
     ac: String,
 }
 async fn signin_form(Form(CreateUser): Form<CreateUser>)-> IntoResponse{
