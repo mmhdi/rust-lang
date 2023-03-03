@@ -38,7 +38,7 @@ struct CreateUser {
     ac: String,
 }
 #[derive(Debug)]
-async fn handler(Form(CreateUser): Form<CreateUser>){
+async fn handler(Form(CreateUser): Form<CreateUser>)-> axum::response::Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection("users");
 	db.insert_one(doc!{"un":CreateUser.ac},None).await.unwrap();
