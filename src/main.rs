@@ -1,5 +1,6 @@
 use tokio;
 use axum::{extract::Form, routing::get, response::Response, Router};
+use serde::Deserialize;
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc, Client};
@@ -34,6 +35,7 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
+#[derive(Deserialize)]
 struct Input {
     user: String,
     pass: String,
