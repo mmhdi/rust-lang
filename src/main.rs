@@ -34,11 +34,10 @@ async fn signin()-> axum::response::Response<String> {
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
-
-async fn handler()-> axum::response::Response<String>{
+async fn handler(){
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection("users");
-	db.insert_one(doc!{"un":"ee"},None).await.unwrap();
+	db.insert_one(doc!{"un":CreateUser.ac},None).await.unwrap();
 }
 
 async fn signup()-> axum::response::Response<String> {
