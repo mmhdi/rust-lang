@@ -37,7 +37,7 @@ async fn signin()-> axum::response::Response<String> {
 struct CreateUser {
     ac: String,
 }
-#[debug_signinform]
+#[debug_signinform(Form(CreateUser): Form<CreateUser>)]
 async fn signinform(Form(CreateUser): Form<CreateUser>){
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.expect("Failed to connect");
 	let db = client.database("braq").collection("users");
