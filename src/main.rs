@@ -41,7 +41,7 @@ struct Login {
     pw: String,
 }
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
-	let client = ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
+	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap());
 	let db = client.database("braq").collection("users");
 	let deb = db.find_one(doc!{"un":login.ac},None).await.unwrap();
 	//db.insert_one(doc!{"un":login.ac},None).await.unwrap();
