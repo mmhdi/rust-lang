@@ -3,7 +3,7 @@ use axum::{extract::Form, routing::get, response::Response, Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
-use mongodb::{bson::{doc,Document},options::ClientOptions, Client};
+use mongodb::{bson::doc,options::ClientOptions, Client};
 
 #[tokio::main]
 async fn main() {
