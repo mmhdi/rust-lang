@@ -40,21 +40,13 @@ struct Login {
     ac: String,
     pw: String
 }
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct Ddb {
-	_id: ObjectId,
-	fn: String,
-    ln: String,
-    un: String,
-    em: String,
-    pw: String,
-    status: String,
-    otpem: String,
-    otpemurl: String
+struct Loginn {
+    ac: String,
+    pw: String
 }
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap()).unwrap();
-	let db = client.database("braq").collection::<Ddb>("users");
+	let db = client.database("braq").collection::<Loginn>("users");
 	let deb  = db.find_one(doc!{"un":login.ac},None).await.unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
