@@ -44,10 +44,10 @@ async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection("users");
 	//let deb = db.find_one(doc!{"un":login.ac},None).await.unwrap();
-	//db.insert_one(doc!{"un":login.ac},None).await.unwrap();
+	db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	context.insert("ac","g");
+	context.insert("ac","gf");
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
