@@ -36,9 +36,9 @@ async fn signin()-> axum::response::Response<String> {
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct Login {
-    pub ac: String,
-    pub pw: String
+struct Login {
+    ac: String,
+    pw: String
 }
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap()).unwrap();
