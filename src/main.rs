@@ -40,6 +40,7 @@ struct Login {
     ac: String,
     pw: String
 }
+#[derive(Clone, Debug, Deserialize, Serialize)]
 struct Ddb {
 	_id: ObjectId,
 	fn: String,
