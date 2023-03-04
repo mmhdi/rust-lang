@@ -36,13 +36,13 @@ async fn signin()-> axum::response::Response<String> {
         .body(tera.render("signin", &Context::new()).unwrap()).unwrap()
 }
 #[derive(Clone, Debug, Deserialize, Serialize)]
-struct Login {
-    ac: String,
-    pw: String,
+pub struct Login {
+    pub ac: String,
+    pub pw: String
 }
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	let client = Client::with_options(ClientOptions::parse("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap()).unwrap();
-	let db = client.database("braq").collection("users");
+	let db = client.database("braq").collection::<Login>("users");
 	let deb  = db.find_one(doc!{"un":login.ac},None).await.unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
