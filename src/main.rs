@@ -40,15 +40,15 @@ struct Login {
     ac: String,
     pw: String
 }
-async fn handler(Form(login): Form<Login>)-> Result<axum::response::Response,String>{
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
+async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Document>("users");
-	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await?;
+	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.get_str("un")? == &login.ac && &deb.get_str("pw")? == &login.pw{
-		context.insert("ac",&deb.get_str("un")?);
+	if deb.is_some() && &deb.get_str("un").unwrap() == &login.ac && &deb.get_str("pw").unwrap() == &login.pw{
+		context.insert("ac",&deb.get_str("un").unwrap());
 	}else{
 		context.insert("ac","none");
 	}
