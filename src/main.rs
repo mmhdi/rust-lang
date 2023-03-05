@@ -48,7 +48,7 @@ async fn handler(Form(login): Form<Login>)-> impl IntoResponse{
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		context.insert("ac",&deb.get("un"));
+		context.insert("ac",&deb.get_str("un"));
 	//}else{
 		//context.insert("ac","none");
 	//}
