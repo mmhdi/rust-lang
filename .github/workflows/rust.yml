@@ -18,21 +18,13 @@ jobs:
     - name: Cargo Cache
       uses: actions/cache@v3
       with:
-        path: ~/.cargo
+        path: |
+          ~/.cargo
+          target
         key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
         restore-keys: |
           ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
           ${{ runner.os }}-cargo
-
-    - name: Cargo Target Cache
-      uses: actions/cache@v3
-      with:
-        path: target
-        key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-          ${{ runner.os }}-cargo-target
-          
 
     - name: Login to DockerHub
       uses: docker/login-action@v2 
