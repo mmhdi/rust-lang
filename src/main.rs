@@ -3,7 +3,7 @@ use axum::{extract::Form, routing::get, response::{Response,IntoResponse}, Route
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
-use mongodb::{bson::{doc,Document},Client};
+use mongodb::{bson::doc,Client};
 
 #[tokio::main]
 async fn main() {
@@ -45,10 +45,10 @@ struct Loginn {
 	un: String,
     pw: String
 }
-async fn handler(Form(login): Form<Login>)-> impl IntoResponse{
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
+async fn handler(Form(login): Form<Login>)-> Result<(), Box<impl IntoResponse>>{
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
 	let db = client.database("braq").collection::<Loginn>("users");
-	let deb = db.find_one(doc!{"un":&login.ac},None).await?;
+	let deb: Loginn = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
