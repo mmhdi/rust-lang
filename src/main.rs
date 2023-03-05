@@ -43,9 +43,6 @@ struct Login {
 #[derive(Deserialize, Serialize)]
 struct Loginn {
 	un: String,
-    em: String,
-    ln: String,
-    ph: String,
     pw: String
 }
 async fn handler(Form(login): Form<Login>)-> impl IntoResponse{
