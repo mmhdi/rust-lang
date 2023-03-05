@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Form, routing::get, response::Response, Router};
+use axum::{extract::Form, routing::get, response::{Response,IntoResponse}, Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
@@ -40,15 +40,15 @@ struct Login {
     ac: String,
     pw: String
 }
-async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
+async fn handler(Form(login): Form<Login>)-> impl IntoResponse{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Document>("users");
-	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await.expect("drop collection should succeed");
+	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await?;
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.get_str("un").unwrap() == &login.ac && &deb.get_str("pw").unwrap() == &login.pw{
-		context.insert("ac",&deb.get_str("un").unwrap());
+	if &deb.get_str("un") == &login.ac && &deb.get_str("pw") == &login.pw{
+		context.insert("ac",&deb.get_str("un"));
 	}else{
 		context.insert("ac","none");
 	}
