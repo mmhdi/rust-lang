@@ -45,7 +45,7 @@ struct Loginn {
 	un: String,
     pw: String
 }
-async fn handler(Form(login): Form<Login>)-> Result<Response,mongodb::error::Error>{
+async fn handler(Form(login): Form<Login>)-> mongodb::error::Result<<Response>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
 	let db = client.database("braq").collection::<Loginn>("users");
 	let deb: Loginn = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
