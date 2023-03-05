@@ -47,8 +47,8 @@ async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if login.ac == deb.get_str("un").to_string().unwrap() && login.pw == deb.get_str("pw").to_string().unwrap(){
-	context.insert("ac",&deb.get_str("un").unwrap());
+	if login.ac == deb.get_str("un").unwrap() && login.pw == deb.get_str("pw").unwrap(){
+		context.insert("ac",&deb.get_str("un").unwrap());
 	}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
