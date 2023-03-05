@@ -48,7 +48,7 @@ struct Loginn {
 async fn handler(Form(login): Form<Login>)-> impl IntoResponse{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Loginn>("users");
-	let deb: Loginn = db.find_one(doc!{"un":&login.ac},None).await??;
+	let deb = db.find_one(doc!{"un":&login.ac},None).await?;
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
