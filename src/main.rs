@@ -40,7 +40,7 @@ struct Login {
     ac: String,
     pw: String
 }
-async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
+async fn handler(Form(login): Form<Login>)-> Result<axum::response::Response<String>>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
 	let db = client.database("braq").collection::<Document>("users");
 	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await?;
