@@ -37,6 +37,7 @@ async fn signin()-> axum::response::Response<String> {
 }
 #[derive(Deserialize, Serialize)]
 struct Login {
+	ac: String,
     un: String,
     pw: String
 }
