@@ -43,15 +43,11 @@ struct Login {
 async fn handler(Form(login): Form<Login>)-> axum::response::Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Document>("users");
-	let deb: Document = db.find_one(doc!{"un":&login.ac},None).await;
+	let deb: Document = db.find_one(doc!{"un":login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.get_str("un").unwrap() == &login.ac && &deb.get_str("pw").unwrap() == &login.pw{
-		context.insert("ac",&deb.get_str("un").unwrap());
-	}else{
-		context.insert("ac","none");
-	}
+	context.insert("ac",&deb.get_str("un").unwrap());
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
