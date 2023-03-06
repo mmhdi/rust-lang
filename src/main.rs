@@ -48,9 +48,9 @@ struct Login {
     ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, StatusCode> {
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.map_err(|_| StatusCode::NOT_FOUND)?;
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.map_err(|_| internal_error)?;
 	let db = client.database("braq").collection::<Login>("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| StatusCode::NOT_FOUND)?;
+	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| internal_error)?;
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
