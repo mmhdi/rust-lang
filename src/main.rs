@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Form, routing::get, response::Response, Router};
+use axum::{extract::Form, routing::get, response::{Response, IntoResponse},Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
@@ -47,7 +47,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn handler(Form(login): Form<Login>)-> Result<Response<String>>{
+async fn handler(Form(login): Form<Login>)-> Result<impl IntoResponse,impl IntoResponse>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.?;
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
