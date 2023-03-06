@@ -47,7 +47,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn handler(Form(login): Form<Login>)-> Response<String>{
+async fn handler(Form(login): Form<Login>)-> Result<impl IntoResponse,impl IntoResponse> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.?;
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
@@ -55,14 +55,17 @@ async fn handler(Form(login): Form<Login>)-> Response<String>{
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		Ok(context.insert("ac",&deb.em));
+		context.insert("ac",&deb.em);
 	//}else{
-		Err(context.insert("ac","none"));
+		//context.insert("ac","none");
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Response::builder().status(axum::http::StatusCode::OK)
+	Ok(Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap()
+        .body(tera.render("signin", &context).unwrap()).unwrap());
+    Err(Response::builder().status(axum::http::StatusCode::OK)
+        .header("Content-Type", "text/html; charset=utf-8")
+        .body(tera.render("signin", &context).unwrap()).unwrap())
 }
 
 async fn signup()-> axum::response::Response<String> {
