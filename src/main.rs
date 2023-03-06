@@ -7,7 +7,7 @@ use mongodb::{bson::doc,Client};
 use std::error::Error;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> mongodb::error::Result<()>{
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
@@ -48,7 +48,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<impl IntoResponse>{
+async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<()> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await??;
@@ -61,10 +61,9 @@ async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<impl Int
 		//context.insert("ac","none");
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Ok(Response::builder().status(axum::http::StatusCode::OK)
+	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap()
-    )
+        .body(tera.render("signin", &context).unwrap()).unwrap();
 }
 
 async fn signup()-> axum::response::Response<String> {
