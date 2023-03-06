@@ -7,7 +7,7 @@ use mongodb::{bson::doc,Client};
 use std::error::Error;
 
 #[tokio::main]
-async fn main() -> mongodb::error::Result<()>{
+async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
@@ -48,7 +48,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> axum::response::Response<String>{
+async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<axum::response::Response<String>> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await??;
