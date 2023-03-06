@@ -63,7 +63,7 @@ async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,impl I
 	Ok(Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &context).unwrap()).unwrap()
-    )
+    );
     Err(Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &context).unwrap()).unwrap()
