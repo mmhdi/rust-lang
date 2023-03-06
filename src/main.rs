@@ -42,8 +42,7 @@ struct Login {
 }
 #[derive(Deserialize, Serialize)]
 struct Loginn {
-	r#fn: Option<String>,
-    ln: Option<String>,
+	ln: Option<String>,
     un: Option<String>,
     em: Option<String>,
     pw: Option<String>,
