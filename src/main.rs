@@ -48,14 +48,14 @@ struct Login {
     ac: Option<String>
 }
 async fn handler(Form(login): Form<Login>)-> Response<String>{
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let db = client.database("braq").collection::<Login>("users");
-	db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
+	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		
+		context.insert("ac",&deb.em);
 	//}else{
 		//context.insert("ac","none");
 	//}
