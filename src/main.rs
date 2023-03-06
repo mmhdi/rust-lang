@@ -10,7 +10,7 @@ async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
-		.route("/signin/", get(signin).post(handler))
+		.route("/signin/", get(signin).post(signin))
 		.route("/signup/", get(signup).post(signup_form))
 		.route("/confirm/email/", get(confirm_email).post(confirm_email_form))
 		.route("/confirm/email/verify/", get(confirm_email_verify).post(confirm_email_verify_form))
@@ -47,7 +47,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn handler(Form(login): Form<Login>)-> Result<impl IntoResponse,impl IntoResponse> {
+async fn signin(Form(login): Form<Login>)-> Result<impl IntoResponse,StatusCode> {
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.?;
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
@@ -61,9 +61,6 @@ async fn handler(Form(login): Form<Login>)-> Result<impl IntoResponse,impl IntoR
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Ok(Response::builder().status(axum::http::StatusCode::OK)
-        .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap());
-    Err(Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &context).unwrap()).unwrap())
 }
