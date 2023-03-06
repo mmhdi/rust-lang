@@ -42,8 +42,8 @@ struct Login {
 }
 #[derive(Deserialize, Serialize)]
 struct Loginn {
-	un: String,
-    pw: String
+	un: Option<String>,
+    pw: Option<String>
 }
 async fn handler(Form(login): Form<Login>)-> Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
@@ -58,9 +58,9 @@ async fn handler(Form(login): Form<Login>)-> Response<String>{
 		//context.insert("ac","none");
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Ok(Response::builder().status(axum::http::StatusCode::OK)
+	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap())
+        .body(tera.render("signin", &context).unwrap()).unwrap()
 }
 
 async fn signup()-> axum::response::Response<String> {
