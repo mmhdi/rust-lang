@@ -48,7 +48,7 @@ struct Login {
     ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, StatusCode> {
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.ok()?;
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.map_err(INTERNAL_SERVER_ERROR)?;
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
