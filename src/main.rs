@@ -56,6 +56,7 @@ async fn signin_form(Form(login): Form<Login>)-> impl IntoResponse{
 	let mut context = Context::new();
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
 		context.insert("ac",&deb.em);
+	//}else{
 		//context.insert("ac","none");
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
