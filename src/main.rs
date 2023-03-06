@@ -47,8 +47,8 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, StatusCode> {
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.map_err(mongodb::error::Error)?;
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, impl IntoResponse> {
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.map_err(|err| err.to_string())?;
 	let db = client.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
