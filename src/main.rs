@@ -42,8 +42,15 @@ struct Login {
 }
 #[derive(Deserialize, Serialize)]
 struct Loginn {
-	un: Option<String>,
-    pw: Option<String>
+	fn: Option<String>,
+    ln: Option<String>,
+    un: Option<String>,
+    em: Option<String>,
+    pw: Option<String>,
+    status: Option<String>,
+    otpem: Option<String>,
+    otpemurl: Option<String>,
+    ac: Option<String>
 }
 async fn handler(Form(login): Form<Login>)-> Response<String>{
 	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
