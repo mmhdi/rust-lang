@@ -48,7 +48,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<()> {
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?.database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
@@ -63,7 +63,7 @@ async fn signin_form(Form(login): Form<Login>)-> Result<()> {
 	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &context).unwrap()).unwrap();
-    Ok(())
+    Ok(impl IntoResponse)
 }
 
 async fn signup()-> axum::response::Response<String> {
