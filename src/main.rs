@@ -48,10 +48,10 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<axum::response::Response<String>> {
-	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
+async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<()> {
+	let client = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?;
 	let db = client.database("braq").collection::<Login>("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await??;
+	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap();
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
 	let mut tera = Tera::default();
 	let mut context = Context::new();
