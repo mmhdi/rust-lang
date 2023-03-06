@@ -55,14 +55,14 @@ async fn handler(Form(login): Form<Login>)-> Result<impl IntoResponse,impl IntoR
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		Ok(context.insert("ac",&deb.em)
+		Ok(context.insert("ac",&deb.em));
 	//}else{
 		//context.insert("ac","none");
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap())
+        .body(tera.render("signin", &context))
 }
 
 async fn signup()-> axum::response::Response<String> {
