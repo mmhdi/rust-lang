@@ -54,7 +54,7 @@ struct Login {
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, Box<dyn Error>> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
-	db.insert_one(doc!{"un":login.ac},None).await?.map_err(|e| format!("Failed to open password file: {:?}", e));
+	db.insert_one(doc!{"un":login.ac},None).await?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//match deb{
