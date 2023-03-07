@@ -50,15 +50,15 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Error::Result<impl IntoResponse>{
+async fn signin_form(Form(login): Form<Login>)-> mongodb::error::Result<impl IntoResponse>{
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
-	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.map_err(internal_error);
+	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
+	db.insert_one(doc!{"un":login.ac},None).awai?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//match deb{
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		context.insert("ac",deb.em);
+		//context.insert("ac",deb.em);
 	//}else{
 		//Err => context.insert("ac","none")
 	//}
