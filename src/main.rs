@@ -11,7 +11,7 @@ async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
-		.route("/signin/", get(signin).post(signin_form))
+		.route("/signin/", get(signin).post(signin_form.into()))
 		.route("/signup/", get(signup).post(signup_form))
 		.route("/confirm/email/", get(confirm_email).post(confirm_email_form))
 		.route("/confirm/email/verify/", get(confirm_email_verify).post(confirm_email_verify_form))
