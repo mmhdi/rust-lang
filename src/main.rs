@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Form, routing::get, response::{Response, IntoResponse},Router};
+use axum::{extract::Form, http::StatusCode, routing::get, response::{Response, IntoResponse},Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
@@ -63,7 +63,7 @@ async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, impl 
 		//Err => context.insert("ac","none")
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Ok::<Response<std::string::String>, Response<std::string::String>>(Response::builder().status(axum::http::StatusCode::OK)
+	Ok::<Response<std::string::String>, StatusCode>(Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
         .body(tera.render("signin", &context).unwrap()).unwrap()
     )
