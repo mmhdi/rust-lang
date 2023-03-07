@@ -4,13 +4,14 @@ use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
+use std::error::Error;
 
 #[tokio::main]
 async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
-		.route("/signin/", get(signin).post(signin_form.Into()))
+		.route("/signin/", get(signin).post(signin_form))
 		.route("/signup/", get(signup).post(signup_form))
 		.route("/confirm/email/", get(confirm_email).post(confirm_email_form))
 		.route("/confirm/email/verify/", get(confirm_email_verify).post(confirm_email_verify_form))
@@ -53,7 +54,7 @@ struct Login {
 async fn signin_form(Form(login): Form<Login>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
-	db.insert_one(doc!{"un":login.ac},None).await.map_err(std::error::Error);
+	db.insert_one(doc!{"un":login.ac},None).await.map_err(Error)?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//match deb{
