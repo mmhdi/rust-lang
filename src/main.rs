@@ -49,14 +49,14 @@ struct Login {
     ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, StatusCode>{
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?.database("braq").collection::<Login>("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
-	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.unwrap();
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
+	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
+	let ggg= db.insert_one(doc!{"un":login.ac},None).await?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//match deb{
 	//if &deb.get_str("un") == &login.un && &deb.get_str("pw") == &login.pw{
-		context.insert("ac",&deb.em);
+		context.insert("ac",&ggg.em);
 	//}else{
 		//Err => context.insert("ac","none")
 	//}
