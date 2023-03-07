@@ -8,7 +8,7 @@ use std::error::Error;
 
 #[tokio::main]
 async fn main() -> Result<(), StatusCode> {
-	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
+	Ok(axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
 		.route("/signin/", get(signin).post(signin_form))
@@ -19,7 +19,7 @@ async fn main() -> Result<(), StatusCode> {
 		.route("/confirm/phone/verify/", get(confirm_phone_verify).post(confirm_phone_verify_form))
 		.route("/confirm/id/", get(confirm_id).post(confirm_id_form))
 		.route("/confirm/id/verify/", get(confirm_id_verify).post(confirm_id_verify_form))
-	.into_make_service()).await.unwrap();
+	.into_make_service()).await.unwrap())
 }
 async fn index()-> axum::response::Response<String> {
 	let mut tera = Tera::default();
