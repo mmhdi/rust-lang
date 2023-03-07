@@ -10,7 +10,7 @@ async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
-		.route("/signin/", get(signin).post(signin_form.Into()))
+		.route("/signin/", get(signin).post(signin_form))
 		.route("/signup/", get(signup).post(signup_form))
 		.route("/confirm/email/", get(confirm_email).post(confirm_email_form))
 		.route("/confirm/email/verify/", get(confirm_email_verify).post(confirm_email_verify_form))
@@ -50,7 +50,7 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, mongodb::error::Error> {
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, impl IntoResponse> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
 	db.insert_one(doc!{"un":login.ac},None).await?;
