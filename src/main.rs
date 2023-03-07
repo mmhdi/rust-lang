@@ -49,7 +49,7 @@ struct Login {
     ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, Box<dyn Error>>{
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	//let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.unwrap().unwrap();
 	let ggg= db.insert_one(doc!{"un":login.ac},None).await?;
 	let mut tera = Tera::default();
