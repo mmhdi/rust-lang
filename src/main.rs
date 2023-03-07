@@ -1,10 +1,9 @@
 use tokio;
-use axum::{extract::Form, http::StatusCode,routing::get, response::{Response, IntoResponse},Router};
+use axum::{extract::Form, routing::get, response::{Response, IntoResponse},Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
-use std::error::Error;
 
 #[tokio::main]
 async fn main() -> Result<(), StatusCode> {
@@ -51,9 +50,9 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, StatusCode>{
+async fn signin_form(Form(login): Form<Login>)-> impl IntoResponse{
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.map_err(internal_error);
+	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await;
 	//let ggg= db.insert_one(doc!{"un":login.ac},None).await.map_err(internal_error);
 	let mut tera = Tera::default();
 	let mut context = Context::new();
@@ -64,17 +63,10 @@ async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, Statu
 		//Err => context.insert("ac","none")
 	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Ok::<Response<std::string::String>, StatusCode>(Response::builder().status(axum::http::StatusCode::OK)
+	Response::builder().status(axum::http::StatusCode::OK)
         .header("Content-Type", "text/html; charset=utf-8")
-        .body(tera.render("signin", &context).unwrap()).unwrap())
+        .body(tera.render("signin", &context).unwrap()).unwrap()
 }
-fn internal_error<E>(err: E) -> (StatusCode, String)
-where
-    E: std::error::Error,
-{
-    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
-}
-
 
 
 async fn signup()-> axum::response::Response<String> {
