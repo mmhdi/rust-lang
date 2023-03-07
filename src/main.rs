@@ -7,7 +7,7 @@ use mongodb::{bson::doc,Client};
 use std::error::Error;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), StatusCode> {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
 		.route("/", get(index))
 		.fallback_service(ServeDir::new("static"))
