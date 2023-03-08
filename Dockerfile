@@ -1,7 +1,7 @@
 FROM rust:1.67.1 as builder
 WORKDIR /hello
 COPY . .
-RUN rustc --explain E0277
+RUN cargo build
 
 EXPOSE 3000
 
