@@ -57,11 +57,11 @@ async fn signin_form(Form(login): Form<Login>)-> Option<impl IntoResponse> {
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.un == &login.un && &deb.pw == &login.pw{
-		context.insert("ac",&deb.em)
-	}else{
-		context.insert("ac","none")
-	}
+	//if &deb.un == &login.un && &deb.pw == &login.pw{
+		context.insert("ac",&deb.em);
+	//}else{
+		//context.insert("ac","none")
+	//}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
