@@ -58,7 +58,7 @@ async fn signin_form(Form(login): Form<Login>)-> Option<impl IntoResponse> {
 	let mut tera = Tera::default();
 	let mut context = Context::new();
 	//if &deb.un == &login.un && &deb.pw == &login.pw{
-		context.insert("ac",&deb.em);
+		context.insert("ac",&deb);
 	//}else{
 		//context.insert("ac","none")
 	//}
