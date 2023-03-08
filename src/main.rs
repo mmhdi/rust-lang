@@ -51,7 +51,7 @@ struct Login {
     ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, &'static str> {
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
 	let deb = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?;
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
