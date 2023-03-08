@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
-
+use std::error::Error;
 #[tokio::main]
 async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
@@ -50,9 +50,9 @@ struct Login {
     otpemurl: Option<String>,
     ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, &'static str> {
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse, Box<dyn Error>> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
-	let deb = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| format!("read file error"))?;
+	let deb = db.find_one(doc!{"un":&login.ac},None).await?;
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
