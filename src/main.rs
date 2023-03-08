@@ -1,10 +1,10 @@
 use tokio;
-use axum::{extract::Form, http::StatusCode, routing::get, response::{Response, IntoResponse},Router};
+use axum::{extract::Form, routing::get, response::{Response, IntoResponse},Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
-use std::error::Error;
+
 #[tokio::main]
 async fn main() {
 	axum::Server::bind(&"0.0.0.0:3000".parse().unwrap()).serve(Router::new()
@@ -20,7 +20,7 @@ async fn main() {
 		.route("/confirm/id/verify/", get(confirm_id_verify).post(confirm_id_verify_form))
 	.into_make_service()).await.unwrap()
 }
-async fn index()-> axum::response::Response<String> {
+async fn index()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("index", include_str!("layouts/index.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -28,7 +28,7 @@ async fn index()-> axum::response::Response<String> {
 		.body(tera.render("index", &Context::new()).unwrap()).unwrap()
 }
 
-async fn signin()-> axum::response::Response<String> {
+async fn signin()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -69,14 +69,14 @@ async fn signin_form(Form(login): Form<Login>)-> impl IntoResponse {
 }
 
 
-async fn signup()-> axum::response::Response<String> {
+async fn signup()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("signup", &Context::new()).unwrap()).unwrap()
 }
-async fn signup_form()-> axum::response::Response<String> {
+async fn signup_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -84,14 +84,14 @@ async fn signup_form()-> axum::response::Response<String> {
 		.body(tera.render("signup", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_email()-> axum::response::Response<String> {
+async fn confirm_email()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_email", include_str!("layouts/confirm_email.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_email", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_email_form()-> axum::response::Response<String> {
+async fn confirm_email_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_email", include_str!("layouts/confirm_email.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -99,14 +99,14 @@ async fn confirm_email_form()-> axum::response::Response<String> {
 		.body(tera.render("confirm_email", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_email_verify()-> axum::response::Response<String> {
+async fn confirm_email_verify()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_email_verify", include_str!("layouts/confirm_email_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_email_verify", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_email_verify_form()-> axum::response::Response<String> {
+async fn confirm_email_verify_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_email_verify", include_str!("layouts/confirm_email_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -114,14 +114,14 @@ async fn confirm_email_verify_form()-> axum::response::Response<String> {
 		.body(tera.render("confirm_email_verify", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_phone()-> axum::response::Response<String> {
+async fn confirm_phone()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_phone", include_str!("layouts/confirm_phone.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_phone", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_phone_form()-> axum::response::Response<String> {
+async fn confirm_phone_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_phone", include_str!("layouts/confirm_phone.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -129,14 +129,14 @@ async fn confirm_phone_form()-> axum::response::Response<String> {
 		.body(tera.render("confirm_phone", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_phone_verify()-> axum::response::Response<String> {
+async fn confirm_phone_verify()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_phone_verify", include_str!("layouts/confirm_phone_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_phone_verify", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_phone_verify_form()-> axum::response::Response<String> {
+async fn confirm_phone_verify_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_phone_verify", include_str!("layouts/confirm_phone_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -144,14 +144,14 @@ async fn confirm_phone_verify_form()-> axum::response::Response<String> {
 		.body(tera.render("confirm_phone_verify", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_id()-> axum::response::Response<String> {
+async fn confirm_id()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_id", include_str!("layouts/confirm_id.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_id", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_id_form()-> axum::response::Response<String> {
+async fn confirm_id_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_id", include_str!("layouts/confirm_id.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -159,14 +159,14 @@ async fn confirm_id_form()-> axum::response::Response<String> {
 		.body(tera.render("confirm_id", &Context::new()).unwrap()).unwrap()
 }
 
-async fn confirm_id_verify()-> axum::response::Response<String> {
+async fn confirm_id_verify()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_id_verify", include_str!("layouts/confirm_id_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("confirm_id_verify", &Context::new()).unwrap()).unwrap()
 }
-async fn confirm_id_verify_form()-> axum::response::Response<String> {
+async fn confirm_id_verify_form()-> impl IntoResponse {
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("confirm_id_verify", include_str!("layouts/confirm_id_verify.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
