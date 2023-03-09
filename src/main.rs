@@ -5,6 +5,7 @@ use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
 use axum::http::StatusCode;
+use std::error::Error;
 
 #[tokio::main]
 async fn main() {
