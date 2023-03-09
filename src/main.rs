@@ -57,7 +57,7 @@ async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,String
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.to_string() == &login.un && &deb.to_string() == &login.pw{
+	if &deb.un.to_string() == &login.un && &deb.pw.to_string() == &login.pw{
 		context.insert("ac",&deb.em.to_string())
 	}else{
 		context.insert("ac","none")
