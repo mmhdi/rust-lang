@@ -51,7 +51,7 @@ struct Sign {
 	ac: Option<String>
 }
 async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await?.database("braq").collection::<Sign>("users");
 	let deb: Sign = db.find_one(doc!{"un":&sign.ac},None).await.unwrap().unwrap();
 	let mut context = Context::new();
 	if deb.un.is_none() {
