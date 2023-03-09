@@ -54,12 +54,12 @@ struct Login {
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<Response<String>,String> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
-	let deb: Option<Login> = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?;
+	let deb: Option<Login> = Some(db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?);
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if Some(&deb.un) == &login.un && Some(&deb.pw) == &login.pw{
-		context.insert("ac",Some(&deb.em))
+	if &deb.un == &login.un && &deb.pw == &login.pw{
+		context.insert("ac",&deb.em)
 	}else{
 		context.insert("ac","none")
 	}
