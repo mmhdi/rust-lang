@@ -41,15 +41,15 @@ async fn signin()-> impl IntoResponse {
 
 #[derive(Deserialize, Serialize)]
 struct Login {
-	r#fn: Option<String>,
-	ln: Option<String>,
-	un: Option<String>,
-	em: Option<String>,
-	pw: Option<String>,
-	status: Option<String>,
-	otpem: Option<String>,
-	otpemurl: Option<String>,
-	ac: Option<String>
+	r#fn: String,
+	ln: String,
+	un: String,
+	em: String,
+	pw: String,
+	status: String,
+	otpem: String,
+	otpemurl: String,
+	ac: String
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,String> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
