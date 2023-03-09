@@ -54,7 +54,7 @@ async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
 	let mut context = Context::new();
 	match db.find_one(doc!{"un":&sign.ac},None).await {
-		Some(doc) => context.insert("ac","signed in {doc}"),
+		Some(doc) => context.insert("ac",doc),
 		None => context.insert("ac","signed not")
 	};
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
