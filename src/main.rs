@@ -41,24 +41,24 @@ async fn signin()-> impl IntoResponse {
 
 #[derive(Deserialize, Serialize)]
 struct Login {
-	r#fn: String,
-	ln: String,
-	un: String,
-	em: String,
-	pw: String,
-	status: String,
-	otpem: String,
-	otpemurl: String,
-	ac: String
+	r#fn: Option<String>,
+	ln: Option<String>,
+	un: Option<String>,
+	em: Option<String>,
+	pw: Option<String>,
+	status: Option<String>,
+	otpem: Option<String>,
+	otpemurl: Option<String>,
+	ac: Option<String>
 }
 async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,String> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
-	let deb = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?;
+	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?;
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
-	if &deb.un.to_string() == &login.un && &deb.pw.to_string() == &login.pw{
-		context.insert("ac",&deb.em.to_string())
+	if &deb.un == &login.un && &deb.pw == &login.pw{
+		context.insert("ac",&deb.em)
 	}else{
 		context.insert("ac","none")
 	}
