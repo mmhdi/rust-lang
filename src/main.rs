@@ -55,7 +55,7 @@ async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 	let deb = db.find_one(doc!{"un":&sign.ac},None).await.unwrap();
 	let mut context = Context::new();
 	match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
-		Some(doc) => context.insert("ac",&doc),
+		Some(doc) => context.insert("ac",&doc.em),
 		None => context.insert("ac","signed not")
 	}
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
