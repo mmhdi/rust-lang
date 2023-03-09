@@ -41,7 +41,7 @@ async fn signin()-> impl IntoResponse {
 
 
 #[derive(Deserialize, Serialize)]
-struct Login {
+struct Sign {
 	r#fn: Option<String>,
 	ln: Option<String>,
 	un: Option<String>,
@@ -52,17 +52,15 @@ struct Login {
 	otpemurl: Option<String>,
 	ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<Response<String>,String> {
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
-	let deb: Result<Login> = Ok(db.find_one(doc!{"un":&login.ac},None).await?);
+async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
+	let mut context = Context::new();
+	match db.find_one(doc!{"un":&sign.ac},None).await) {
+		Ok(context.insert("ac","signed in")),
+		Err(context.insert("ac","signed not"))
+	};
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
-	let mut context = Context::new();
-	if &deb.un == &login.un && &deb.pw == &login.pw{
-		context.insert("ac",&deb.em)
-	}else{
-		context.insert("ac","none")
-	}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Ok(Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
