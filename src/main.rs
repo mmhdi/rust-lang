@@ -64,7 +64,7 @@ async fn signin_form(Form(login): Form<Login>)-> Option<impl IntoResponse> {
 		context.insert("ac","none")
 	}
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
-	Ok(Response::builder().status(axum::http::StatusCode::OK)
+	Some(Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("signin", &context).unwrap()).unwrap())
 }
