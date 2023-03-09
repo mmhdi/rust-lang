@@ -52,9 +52,9 @@ struct Login {
 	otpemurl: Option<String>,
 	ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,&'static str> {
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,String> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
-	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await?;
+	let deb: Option<Login> = db.find_one(doc!{"un":&login.ac},None).await.map_err(|_| "read file error")?;
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	let mut context = Context::new();
@@ -67,7 +67,6 @@ async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,&'stat
 	Ok(Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("signin", &context).unwrap()).unwrap());
-	Err(format!("Error 403"))
 }
 
 
