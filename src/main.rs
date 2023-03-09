@@ -52,10 +52,12 @@ struct Sign {
 }
 async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
+	let deb: Sign = db.find_one(doc!{"un":&sign.ac},None).await.unwrap();
 	let mut context = Context::new();
-	match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
-		Some(doc) => context.insert("ac",doc),
-		None => context.insert("ac","signed not")
+	if deb.is_none() {
+		context.insert("ac","none")
+	}else{
+		context.insert("ac",&deb.em)
 	};
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
