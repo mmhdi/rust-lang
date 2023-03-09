@@ -1,5 +1,5 @@
 use tokio;
-use axum::{extract::Form, http::StatusCode, routing::get, response::{Response, IntoResponse},Router};
+use axum::{extract::Form, routing::get, response::{Response, IntoResponse},Router};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
@@ -52,7 +52,7 @@ struct Login {
 	otpemurl: Option<String>,
 	ac: Option<String>
 }
-async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,StatusCode> {
+async fn signin_form(Form(login): Form<Login>)-> Result<impl IntoResponse,Box<dyn Error + 'static>> {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Login>("users");
 	let deb: Login = db.find_one(doc!{"un":&login.ac},None).await?.into();
 	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
