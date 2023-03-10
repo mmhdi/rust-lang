@@ -92,7 +92,7 @@ struct Signup {
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Signup>("users");
 	let mut context = Context::new();
-	if signup.fn.is_none(){
+	if signup.r#fn.is_none(){
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
 	if signup.ln.is_none(){
@@ -110,7 +110,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.rp.is_none(){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
-	if signuppw.is_none() != signup.rp.is_none() {
+	if signup.pw.is_none() != signup.rp.is_none() {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	
