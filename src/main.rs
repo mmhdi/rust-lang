@@ -38,7 +38,7 @@ async fn signin()-> impl IntoResponse {
 
 
 
-#[derive(Deserialize, Serialize, PartialEq)]
+#[derive(Deserialize, Serialize)]
 struct Sign {
 	r#fn: Option<String>,
 	ln: Option<String>,
@@ -75,13 +75,26 @@ async fn signup()-> impl IntoResponse {
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("signup", &Context::new()).unwrap()).unwrap()
 }
-
+#[derive(Deserialize, Serialize)]
+struct Sign {
+	r#fn: Option<String>,
+	ln: Option<String>,
+	un: Option<String>,
+	em: Option<String>,
+	pw: Option<String>,
+	rp: Option<String>,
+	rpw: Option<String>,
+	status: Option<String>,
+	otpem: Option<String>,
+	otpemurl: Option<String>,
+	ac: Option<String>
+}
 async fn signup_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
 	let mut context = Context::new();
-	//if sign.fn.is_none(){
-		//context.insert("fn","يجب كتابة الإسم الأول")
-	//}
+	if sign.fn.is_none(){
+		context.insert("fn","يجب كتابة الإسم الأول")
+	}
 	if sign.ln.is_none(){
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
@@ -101,7 +114,7 @@ async fn signup_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	
-	db.insert_one(doc!{"ln":sign.ln,"un":sign.un,"em":sign.em,"pw":sign.pw},None).await.unwrap();
+	db.insert_one(doc!{"fn":sign.fn,"ln":sign.ln,"un":sign.un,"em":sign.em,"pw":sign.pw},None).await.unwrap();
 	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
 		//Some(u) => context.insert("ac","signed it"),
 		//None => context.insert("ac","signed not")
