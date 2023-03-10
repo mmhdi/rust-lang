@@ -77,17 +77,17 @@ async fn signup()-> impl IntoResponse {
 }
 #[derive(Deserialize, Serialize)]
 struct Signup {
-	r#fn: Option<&str>,
-	ln: Option<&str>,
-	un: Option<&str>,
-	em: Option<&str>,
-	pw: Option<&str>,
-	rp: Option<&str>,
-	rpw: Option<&str>,
-	status: Option<&str>,
-	otpem: Option<&str>,
-	otpemurl: Option<&str>,
-	ac: Option<&str>
+	r#fn: Option<String>,
+	ln: Option<String>,
+	un: Option<String>,
+	em: Option<String>,
+	pw: Option<String>,
+	rp: Option<String>,
+	rpw: Option<String>,
+	status: Option<String>,
+	otpem: Option<String>,
+	otpemurl: Option<String>,
+	ac: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
