@@ -79,9 +79,9 @@ async fn signup()-> impl IntoResponse {
 async fn signup_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection::<Sign>("users");
 	let mut context = Context::new();
-	if sign.fn.is_none(){
-		context.insert("fn","يجب كتابة الإسم الأول")
-	}
+	//if sign.fn.is_none(){
+		//context.insert("fn","يجب كتابة الإسم الأول")
+	//}
 	if sign.ln.is_none(){
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
@@ -101,7 +101,7 @@ async fn signup_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	
-	db.insert_one(doc!{"fn":sign.fn,"ln":sign.ln,"un":sign.un,"em":sign.em,"pw":sign.pw},None).await.unwrap();
+	db.insert_one(doc!{"ln":sign.ln,"un":sign.un,"em":sign.em,"pw":sign.pw},None).await.unwrap();
 	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
 		//Some(u) => context.insert("ac","signed it"),
 		//None => context.insert("ac","signed not")
