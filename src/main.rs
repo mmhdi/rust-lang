@@ -88,7 +88,7 @@ struct Signup {
 	otpem: Option<String>,
 	otpemurl: Option<String>,
 	ac: Option<String>,
-	non: Option<String>,
+	non: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
@@ -99,14 +99,16 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.ln == signup.non{
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	let mut fun = match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
-		Some|
-		None
-	};
 	if signup.un == signup.non{
 		context.insert("un","يجب كتابة إسم المستخدم")
-	}else if fun == Some{
-		context.insert("un","يجب اختيار إسم المستخدم آخر")
+	}else{
+		let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
+			Some|
+			None|
+		};
+		if fun == Some{
+			context.insert("un","يجب اختيار إسم المستخدم آخر")
+		}
 	}
 	if signup.em == signup.non{
 		context.insert("em","يجب كتابة البريد الإلكتروني")
