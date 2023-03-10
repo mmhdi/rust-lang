@@ -87,7 +87,8 @@ struct Signup {
 	status: Option<String>,
 	otpem: Option<String>,
 	otpemurl: Option<String>,
-	ac: Option<String>
+	ac: Option<String>,
+	non: Option<i8>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
@@ -116,10 +117,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.r#fn != signup.non && signup.ln != signup.non && signup.un != signup.non && signup.em != signup.non && signup.pw != signup.non && signup.rp != signup.non && signup.pw == signup.rp {
 		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
 	}
-	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
-		//Some(u) => context.insert("ac","signed it"),
-		//None => context.insert("ac","signed not")
-	//}
+	
 	
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
