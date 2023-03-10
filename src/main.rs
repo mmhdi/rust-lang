@@ -110,7 +110,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.rp.is_none(){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
-	if signuppw.is_none() != sign.rp.is_none() {
+	if signuppw.is_none() != signup.rp.is_none() {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	
