@@ -88,7 +88,7 @@ struct Signup {
 	otpem: Option<String>,
 	otpemurl: Option<String>,
 	ac: Option<String>,
-	non: Option<i8>
+	non: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
