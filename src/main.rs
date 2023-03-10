@@ -93,13 +93,13 @@ struct Signup {
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
-	if signup.r#fn == Some(""){
+	if signup.r#fn == "".to_string(){
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
-	if signup.ln == Some(""){
+	if signup.ln == "".to_string(){
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	if signup.un == Some(""){
+	if signup.un == "".to_string(){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	//}else{
 		//let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
@@ -110,19 +110,19 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			//context.insert("un","يجب اختيار إسم المستخدم آخر")
 		//}
 	}
-	if signup.em == Some(""){
+	if signup.em == "".to_string(){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
 	}
-	if signup.pw == Some(""){
+	if signup.pw == "".to_string(){
 		context.insert("pw","يجب كتابة كلمة المرور")
 	}
-	if signup.rp == Some(""){
+	if signup.rp == "".to_string(){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
 	if signup.pw != signup.rp {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
-	if signup.r#fn != Some("") && signup.ln != Some("") && signup.un != Some("") && signup.em != Some("") && signup.pw != Some("") && signup.rp != Some("") && signup.pw == signup.rp {
+	if signup.r#fn != "".to_string() && signup.ln != "".to_string() && signup.un != "".to_string() && signup.em != "".to_string() && signup.pw != "".to_string() && signup.rp != "".to_string() && signup.pw == signup.rp {
 		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
 	}
 	
