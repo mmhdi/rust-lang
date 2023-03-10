@@ -125,7 +125,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
 		.header("Content-Type", "text/html; charset=utf-8")
-		.body(tera.render("signup", &Context::new()).unwrap()).unwrap()
+		.body(tera.render("signup", &context).unwrap()).unwrap()
 }
 
 async fn confirm_email()-> impl IntoResponse {
