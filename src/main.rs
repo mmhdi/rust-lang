@@ -113,8 +113,9 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.pw.is_none() != signup.rp.is_none() {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
-	
-	db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
+	if signup.r#fn.is_some() && signup.ln.is_some() && signup.un.is_some() && signup.em.is_some() && signup.pw.is_some() == signup.rp.is_some() {
+		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
+	}
 	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
 		//Some(u) => context.insert("ac","signed it"),
 		//None => context.insert("ac","signed not")
