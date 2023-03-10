@@ -75,7 +75,7 @@ async fn signup()-> impl IntoResponse {
 		.header("Content-Type", "text/html; charset=utf-8")
 		.body(tera.render("signup", &Context::new()).unwrap()).unwrap()
 }
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Eq, PartialEq)]
 struct Signup {
 	r#fn: Option<String>,
 	ln: Option<String>,
