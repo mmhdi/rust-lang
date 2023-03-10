@@ -92,25 +92,25 @@ struct Signup {
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
-	if signup.r#fn.is_none(){
+	if signup.r#fn == ""{
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
-	if signup.ln.is_none(){
+	if signup.ln == ""{
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	if signup.un.is_none(){
+	if signup.un == ""{
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}
-	if signup.em.is_none(){
+	if signup.em == ""{
 		context.insert("em","يجب كتابة البريد الإلكتروني")
 	}
-	if signup.pw.is_none(){
+	if signup.pw == ""{
 		context.insert("pw","يجب كتابة كلمة المرور")
 	}
-	if signup.rp.is_none(){
+	if signup.rp == ""{
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
-	if signup.pw.is_none() != signup.rp.is_none() {
+	if signup.pw == "" != signup.rp == "" {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn.is_some() && signup.ln.is_some() && signup.un.is_some() && signup.em.is_some() && signup.pw.is_some() == signup.rp.is_some() {
