@@ -101,14 +101,14 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}
 	if signup.un == signup.non{
 		context.insert("un","يجب كتابة إسم المستخدم")
-	}else{
-		let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			Some(a) =>"a",
-			None =>"b"
-		};
-		if fun == Some(a){
-			context.insert("un","يجب اختيار إسم المستخدم آخر")
-		}
+	//}else{
+		//let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
+			//Some(a) =>"a",
+			//None =>"b"
+		//};
+		//if fun == Some(a){
+			//context.insert("un","يجب اختيار إسم المستخدم آخر")
+		//}
 	}
 	if signup.em == signup.non{
 		context.insert("em","يجب كتابة البريد الإلكتروني")
