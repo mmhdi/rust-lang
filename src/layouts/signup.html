@@ -26,11 +26,11 @@
 		</div>
 		<button type="submit">Submit</button>
 	</form>
-{{ Fn }}
-{{ Ln }}
-{{ Un }}
-{{ Em }}
-{{ Pw }}
-{{ Rp }}
-{{ Rpw }}
+{% if fn %}{{ fn }}{% else %}{% endif %}
+{% if ln %}{{ ln }}{% else %}{% endif %}
+{% if un %}{{ un }}{% else %}{% endif %}
+{% if em %}{{ em }}{% else %}{% endif %}
+{% if pw %}{{ pw }}{% else %}{% endif %}
+{% if rp %}{{ rp }}{% else %}{% endif %}
+{% if rpw %}{{ rpw }}{% else %}{% endif %}
 {% include "footer"%}
