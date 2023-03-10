@@ -77,43 +77,43 @@ async fn signup()-> impl IntoResponse {
 }
 #[derive(Deserialize, Serialize)]
 struct Signup {
-	r#fn: Option<String>,
-	ln: Option<String>,
-	un: Option<String>,
-	em: Option<String>,
-	pw: Option<String>,
-	rp: Option<String>,
-	rpw: Option<String>,
-	status: Option<String>,
-	otpem: Option<String>,
-	otpemurl: Option<String>,
-	ac: Option<String>
+	r#fn: Option<&str>,
+	ln: Option<&str>,
+	un: Option<&str>,
+	em: Option<&str>,
+	pw: Option<&str>,
+	rp: Option<&str>,
+	rpw: Option<&str>,
+	status: Option<&str>,
+	otpem: Option<&str>,
+	otpemurl: Option<&str>,
+	ac: Option<&str>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
-	if signup.r#fn.is_none(){
+	if signup.r#fn == ""{
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
-	if signup.ln.is_none(){
+	if signup.ln == ""{
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	if signup.un.is_none(){
+	if signup.un == ""{
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}
-	if signup.em.is_none(){
+	if signup.em == ""{
 		context.insert("em","يجب كتابة البريد الإلكتروني")
 	}
-	if signup.pw.is_none(){
+	if signup.pw == ""{
 		context.insert("pw","يجب كتابة كلمة المرور")
 	}
-	if signup.rp.is_none(){
+	if signup.rp == ""{
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
 	if signup.pw != signup.rp {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
-	if signup.r#fn.is_some() && signup.ln.is_some() && signup.un.is_some() && signup.em.is_some() && signup.pw == signup.rp {
+	if signup.r#fn == "" && signup.ln == "" && signup.un == "" && signup.em == "" && signup.pw == signup.rp {
 		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
 	}
 	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
