@@ -92,28 +92,28 @@ struct Signup {
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
-	if signup.r#fn == None{
+	if signup.r#fn.is_empty(){
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
-	if signup.ln == None{
+	if signup.ln.is_empty(){
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	if signup.un == None{
+	if signup.un.is_empty(){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}
-	if signup.em == None{
+	if signup.em.is_empty(){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
 	}
-	if signup.pw == None{
+	if signup.pw.is_empty(){
 		context.insert("pw","يجب كتابة كلمة المرور")
 	}
-	if signup.rp == None{
+	if signup.rp.is_empty(){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
 	if signup.pw != signup.rp {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
-	if signup.r#fn != Some && signup.ln != Some && signup.un != Some && signup.em != Some && signup.pw == signup.rp {
+	if signup.r#fn != "" && signup.ln != "" && signup.un != "" && signup.em != "" && signup.pw == signup.rp {
 		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
 	}
 	//match db.find_one(doc!{"un":&sign.ac},None).await.unwrap() {
