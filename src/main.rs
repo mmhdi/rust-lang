@@ -77,29 +77,29 @@ async fn signup()-> impl IntoResponse {
 }
 #[derive(Deserialize, Serialize)]
 struct Signup {
-	r#fn: Option<&'static str>,
-	ln: Option<&'static str>,
-	un: Option<&'static str>,
-	em: Option<&'static str>,
-	pw: Option<&'static str>,
-	rp: Option<&'static str>,
-	rpw: Option<&'static str>,
-	status: Option<&'static str>,
-	otpem: Option<&'static str>,
-	otpemurl: Option<&'static str>,
-	ac: Option<&'static str>,
-	non: Option<&'static str>
+	r#fn: Option<String>,
+	ln: Option<String>,
+	un: Option<String>,
+	em: Option<String>,
+	pw: Option<String>,
+	rp: Option<String>,
+	rpw: Option<String>,
+	status: Option<String>,
+	otpem: Option<String>,
+	otpemurl: Option<String>,
+	ac: Option<String>,
+	non: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
-	if signup.r#fn == Some(""){
+	if signup.r#fn == Some("".to_string()){
 		context.insert("fn","يجب كتابة الإسم الأول")
 	}
-	if signup.ln == Some(""){
+	if signup.ln == Some("".to_string()){
 		context.insert("ln","يجب كتابة الإسم الأخير")
 	}
-	if signup.un == Some(""){
+	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	//}else{
 		//let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
@@ -110,19 +110,19 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			//context.insert("un","يجب اختيار إسم المستخدم آخر")
 		//}
 	}
-	if signup.em == Some(""){
+	if signup.em == Some("".to_string()){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
 	}
-	if signup.pw == Some(""){
+	if signup.pw == Some("".to_string()){
 		context.insert("pw","يجب كتابة كلمة المرور")
 	}
-	if signup.rp == Some(""){
+	if signup.rp == Some("".to_string()){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
 	}
 	if signup.pw != signup.rp {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
-	if signup.r#fn != Some("") && signup.ln != Some("") && signup.un != Some("") && signup.em != Some("") && signup.pw != Some("") && signup.rp != Some("") && signup.pw == signup.rp {
+	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
 		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
 	}
 	
