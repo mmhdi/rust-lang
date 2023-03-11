@@ -101,14 +101,6 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
-	}else{
-		let mut fun = match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			Some(okkk) =>"ok".to_string(),
-			None =>"err".to_string()
-		};
-		if fun == Some(okkk){
-			context.insert("un","يجب اختيار إسم المستخدم آخر")
-		}
 	}
 	if signup.em == Some("".to_string()){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
@@ -123,7 +115,10 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
-		db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap();
+		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
+			Some(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
+			None => db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap()
+		}
 	}
 	
 	
