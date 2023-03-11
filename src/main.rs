@@ -106,7 +106,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			Some(..) =>"ok",
 			None =>"err"
 		};
-		if fun == Some(..){
+		if fun == Some("ok"){
 			context.insert("un","يجب اختيار إسم المستخدم آخر")
 		}
 	}
