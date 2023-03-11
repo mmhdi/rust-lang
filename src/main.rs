@@ -101,14 +101,14 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
-	//}else{
-		//let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			//Some(a) =>"a",
-			//None =>"b"
-		//};
-		//if fun == Some(a){
-			//context.insert("un","يجب اختيار إسم المستخدم آخر")
-		//}
+	}else{
+		let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
+			Some(a) =>"a",
+			None =>"b"
+		};
+		if fun == Some(a){
+			context.insert("un","يجب اختيار إسم المستخدم آخر")
+		}
 	}
 	if signup.em == Some("".to_string()){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
@@ -123,7 +123,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
-		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw},None).await.unwrap();
+		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap();
 	}
 	
 	
