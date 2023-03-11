@@ -59,7 +59,6 @@ async fn signin_form(Form(sign): Form<Sign>)-> impl IntoResponse {
 		Some(u) => context.insert("ac",&u.em),
 		None => context.insert("ac","signed not")
 	}
-	//db.insert_one(doc!{"un":login.ac},None).await.map_err(|_| "read file error")?;
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signin", include_str!("layouts/signin.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
@@ -92,6 +91,7 @@ struct Signup {
 	ac: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
+	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap();
 	let mut context = Context::new();
 	if signup.r#fn == Some("".to_string()){
 		context.insert("fn","يجب كتابة الإسم الأول")
@@ -102,8 +102,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
-		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
-		let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
+		let mut fun = match db.database("braq").collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
 			Some(..) =>{},
 			None =>{}
 		};
@@ -124,7 +123,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
-		db.insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap();
+		db.database("braq").collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap();
 	}
 	
 	
