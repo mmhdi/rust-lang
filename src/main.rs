@@ -103,10 +103,10 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
 		let mut fun = match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			Some(..) =>"ok",
+			Some(ok) =>"ok",
 			None =>"err"
 		};
-		if fun == Some("ok"){
+		if fun == Some(ok){
 			context.insert("un","يجب اختيار إسم المستخدم آخر")
 		}
 	}
