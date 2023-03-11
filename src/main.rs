@@ -117,9 +117,12 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
 			Some(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
-			_ => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await.unwrap() {
+			None => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await.unwrap() {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
-				_ => db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap()
+				None => match db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap() {
+					Some(fem) =>context.insert("em","تم"),
+					None => context.insert("em","حدثت مشكلة اثناء إنشاء حساب، يرجى المحاولة لاحقاً"),
+				}
 			}
 		}
 	}
