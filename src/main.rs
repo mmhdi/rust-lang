@@ -92,7 +92,6 @@ struct Signup {
 	ac: Option<String>
 }
 async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
-	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 	let mut context = Context::new();
 	if signup.r#fn == Some("".to_string()){
 		context.insert("fn","يجب كتابة الإسم الأول")
@@ -103,11 +102,12 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
+		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq").collection("users");
 		let mut fun = match db.find_one(doc!{"un":&signup.un},None).await.unwrap() {
 			Some(f) =>{},
 			None =>{}
 		};
-		if fun == Some(""){
+		if fun == Some({}){
 			context.insert("un","يجب اختيار إسم المستخدم آخر")
 		}
 	}
