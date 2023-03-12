@@ -102,6 +102,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
+		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
 			Ok(fun),
 			_
@@ -120,7 +121,6 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
-		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
 			Ok(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			_ => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await {
