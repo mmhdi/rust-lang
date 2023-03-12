@@ -120,7 +120,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			Some(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			None => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await.unwrap() {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
-				None => db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.as_ref().unwrap()
+				None => db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await.unwrap().as_ref()
 			}
 		}
 	}
