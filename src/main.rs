@@ -133,11 +133,11 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			}
 		}
 	}else{
-		context.insert("vfn",&signup.r#fn)
-		context.insert("ln",&signup.ln)
-		context.insert("vun",&signup.un)
-		context.insert("vem",&signup.em)
-		context.insert("vpw",&signup.pw)
+		context.insert("vfn",&signup.r#fn);
+		context.insert("ln",&signup.ln);
+		context.insert("vun",&signup.un);
+		context.insert("vem",&signup.em);
+		context.insert("vpw",&signup.pw);
 		context.insert("vrp",&signup.rp)
 	}
 	let mut tera = Tera::default();
