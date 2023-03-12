@@ -96,40 +96,27 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let mut context = Context::new();
 	if signup.r#fn == Some("".to_string()){
 		context.insert("fn","يجب كتابة الإسم الأول")
-	}else{
-		context.insert("vfn",&signup.r#fn)
 	}
 	if signup.ln == Some("".to_string()){
 		context.insert("ln","يجب كتابة الإسم الأخير")
-	}else{
-		context.insert("vln",&signup.ln)
 	}
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
 		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			Some(fun) => 
-				context.insert("vun",&signup.un)
-				//context.insert("un","يجب اختيار إسم المستخدم آخر")
-			//},
+			Some(fun) => context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			_ => ()
 		}
 	}
 	if signup.em == Some("".to_string()){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
-	}else{
-		context.insert("vem",&signup.em)
 	}
 	if signup.pw == Some("".to_string()){
 		context.insert("pw","يجب كتابة كلمة المرور")
-	}else{
-		context.insert("vpw",&signup.pw)
 	}
 	if signup.rp == Some("".to_string()){
 		context.insert("rp","يجب إعادة كتابة كلمة المرور")
-	}else{
-		context.insert("vrp",&signup.rp)
 	}
 	if signup.pw != signup.rp {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
@@ -145,6 +132,13 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 				}
 			}
 		}
+	}else{
+		context.insert("vfn",&signup.r#fn)
+		context.insert("ln",&signup.ln)
+		context.insert("vun",&signup.un)
+		context.insert("vem",&signup.em)
+		context.insert("vpw",&signup.pw)
+		context.insert("vrp",&signup.rp)
 	}
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
