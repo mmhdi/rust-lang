@@ -103,7 +103,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("un","يجب كتابة إسم المستخدم")
 	}else{
 		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
-		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
+		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
 			Some(fun) => context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			_ => ()
 		}
