@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
-use rand::rngs::StdRng;
+use rand::{Rng,rngs::StdRng};
 
 #[tokio::main]
 async fn main() {
