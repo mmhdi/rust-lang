@@ -121,7 +121,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			None => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await.unwrap() {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
 				None => match db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await {
-					Ok(fem) =>context.insert("em","تم"),
+					Ok(fer) =>context.insert("em","تم"),
 					_ => context.insert("em","حدث خطأ")
 				}
 			}
