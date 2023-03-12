@@ -132,9 +132,14 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 				}
 			}
 		}
+	}else{
+		context.insert("vfn",&signup.r#fn);
+		context.insert("vln",&signup.ln);
+		context.insert("vun",&signup.un);
+		context.insert("vem",&signup.pw);
+		context.insert("vpw",&signup.un);
+		context.insert("vrp",&signup.rp)
 	}
-	
-	
 	let mut tera = Tera::default();
 	tera.add_raw_templates(vec![("signup", include_str!("layouts/signup.html")),("header", include_str!("layouts/partials/header.html")),("footer", include_str!("layouts/partials/footer.html"))]).unwrap();
 	Response::builder().status(axum::http::StatusCode::OK)
