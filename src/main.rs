@@ -101,6 +101,11 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}
 	if signup.un == Some("".to_string()){
 		context.insert("un","يجب كتابة إسم المستخدم")
+	}else{
+		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
+			Ok(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
+			_
+		}
 	}
 	if signup.em == Some("".to_string()){
 		context.insert("em","يجب كتابة البريد الإلكتروني")
