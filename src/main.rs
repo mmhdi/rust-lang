@@ -95,7 +95,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 	let mut context = Context::new();
 	if signup.r#fn == Some("".to_string()){
-		context.insert("fn",&StdRng::from_entropy())
+		context.insert("fn",&StdRng::from_entropy().gen::<i32>())
 	}
 	if signup.ln == Some("".to_string()){
 		context.insert("ln","يجب كتابة الإسم الأخير")
