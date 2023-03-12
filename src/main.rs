@@ -121,7 +121,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("rpw","يجب كتابة كلمة المرور مرتين بشكل متطابق")
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
-		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
+		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
 			Ok(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			_ => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await {
 				Ok(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
