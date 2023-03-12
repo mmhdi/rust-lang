@@ -136,8 +136,8 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 		context.insert("vfn",&signup.r#fn);
 		context.insert("vln",&signup.ln);
 		context.insert("vun",&signup.un);
-		context.insert("vem",&signup.pw);
-		context.insert("vpw",&signup.un);
+		context.insert("vem",&signup.em);
+		context.insert("vpw",&signup.pw);
 		context.insert("vrp",&signup.rp)
 	}
 	let mut tera = Tera::default();
