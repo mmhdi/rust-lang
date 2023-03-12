@@ -104,8 +104,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}else{
 		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
-			Ok(fun),
-			_
+			(Ok(fun),_)
 		}
 	}
 	if signup.em == Some("".to_string()){
