@@ -2,27 +2,27 @@
 	<form method="post">
 		<div>
 			<label for="fn">First Name:</label>
-			<input type="text" id="fn" name="fn">
+			<input type="text" id="fn" name="fn" value="{% if vfn %}{{ vfn }}{% endif %}">
 		</div>
 		<div>
 			<label for="ln">Last Name:</label>
-			<input type="text" id="ln" name="ln">
+			<input type="text" id="ln" name="ln" value="{% if vln %}{{ vln }}{% endif %}">
 		</div>
 		<div>
 			<label for="un">Username:</label>
-			<input type="text" id="un" name="un">
+			<input type="text" id="un" name="un" value="{% if vun %}{{ vun }}{% endif %}">
 		</div>
 		<div>
 			<label for="em">Email:</label>
-			<input type="email" id="em" name="em">
+			<input type="email" id="em" name="em" value="{% if vem %}{{ vem }}{% endif %}">
 		</div>
 		<div>
 			<label for="pw">Password:</label>
-			<input type="password" id="pw" name="pw">
+			<input type="password" id="pw" name="pw" value="{% if vpw %}{{ vpw }}{% endif %}">
 		</div>
 		<div>
 			<label for="rp">Repeat Password:</label>
-			<input type="password" id="rpw" name="rp">
+			<input type="password" id="rpw" name="rp" value="{% if vrp %}{{ vrp }}{% endif %}">
 		</div>
 		<button type="submit">Submit</button>
 	</form>
