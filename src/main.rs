@@ -122,7 +122,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}
 	if signup.r#fn != Some("".to_string()) && signup.ln != Some("".to_string()) && signup.un != Some("".to_string()) && signup.em != Some("".to_string()) && signup.pw != Some("".to_string()) && signup.rp != Some("".to_string()) && signup.pw == signup.rp {
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await {
-			Some(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
+			Ok(fun) =>context.insert("un","يجب اختيار إسم المستخدم آخر"),
 			_ => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await {
 				Ok(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
 				_ => match db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen"},None).await {
