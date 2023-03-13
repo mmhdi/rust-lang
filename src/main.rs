@@ -5,6 +5,7 @@ use tera::{Context, Tera};
 use tower_http::services::ServeDir;
 use mongodb::{bson::doc,Client};
 use rand::{Rng, SeedableRng, rngs::StdRng, distributions::{Alphanumeric, DistString}};
+use lettre::{transport::smtp::authentication::Credentials, AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 
 #[tokio::main]
 async fn main() {
@@ -127,7 +128,12 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 			_ => match db.collection::<Signup>("users").find_one(doc!{"em":&signup.em},None).await.unwrap() {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
 				_ => match db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen","otpem":StdRng::from_entropy().gen_range(1000000..9999999).to_string(),"otpemurl":Alphanumeric.sample_string(&mut StdRng::from_entropy(),16)},None).await {
-					Ok(fer) =>context.insert("em","تم"),
+					Ok(fer) =>{
+						match AsyncSmtpTransport::<Tokio1Executor>::relay("smtp.gmail.com")?.credentials(Credentials::new("mmhdi.me@gmail.com".to_string(), "zpohzxmbjaxopvnq".to_string())).build().send(Message::builder().from("Hello World <mmhdi.me@gmail.com>".parse()?).to("42 <www.kkyan71@gmail.com>".parse()?).subject("Hello World").body("<h1>Hello World</h1>".to_string())?).await.unwrap() {
+							Some(ogggg) => println!("Email sent successfully!"),
+							_ => panic!("Could not send email")
+						}
+					},
 					_ => context.insert("em","حدث خطأ")
 				}
 			}
