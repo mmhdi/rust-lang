@@ -129,7 +129,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
 				_ => match db.collection("users").insert_one(doc!{"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen","otpem":StdRng::from_entropy().gen_range(1000000..9999999).to_string(),"otpemurl":Alphanumeric.sample_string(&mut StdRng::from_entropy(),16)},None).await {
 					Ok(fer) =>{
-						match AsyncSmtpTransport::<Tokio1Executor>::relay("smtp.gmail.com").unwrap().credentials(Credentials::new("mmhdi.me@gmail.com".to_string(), "zpohzxmbjaxopvnq".to_string())).build().send(Message::builder().from("Hello World <mmhdi.me@gmail.com>".parse().unwrap()).to("42 <www.kkyan71@gmail.com>".parse().unwrap()).subject("Hello World").body("<h1>Hello World</h1>".to_string()).unwrap()).await.unwrap() {
+						match AsyncSmtpTransport::<Tokio1Executor>::starttls_relay("smtp.gmail.com").unwrap().credentials(Credentials::new("mmhdi.me@gmail.com".to_owned(), "zpohzxmbjaxopvnq".to_owned())).build().send(Message::builder().from("NoBody <mmhdi.me@gmail.com>".parse().unwrap()).to("Hei <www.kkyan71@gmail.com>".parse().unwrap()).subject("Happy new async year").body("<h1>Hello World</h1>".to_string()).unwrap()).await.unwrap() {
 							Some(ogggg) => context.insert("em","تم"),
 							_ => ()
 						}
