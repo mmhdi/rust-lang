@@ -106,7 +106,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 	}else{
 		let db = Client::with_uri_str("mongodb+srv://mbra:mbra@cluster0.um0c2p7.mongodb.net/?retryWrites=true&w=majority").await.unwrap().database("braq");
 		match db.collection::<Signup>("users").find_one(doc!{"un":&signup.un},None).await.unwrap() {
-			Some(fun) => context.insert("un","يجب اختيار إسم المستخدم آخر"),
+			Some(fun) => context.insert("un",fun.un),
 			_ => ()
 		}
 	}
@@ -129,7 +129,7 @@ async fn signup_form(Form(signup): Form<Signup>)-> impl IntoResponse {
 				Some(fem) =>context.insert("em","يجب اختيار بريد الكتروني آخر"),
 				_ => match db.collection("users").insert_one(doc!{"_id":Alphanumeric.sample_string(&mut StdRng::from_entropy(),6),"fn":signup.r#fn,"ln":signup.ln,"un":signup.un,"em":signup.em,"pw":signup.pw,"status":"unen","otpem":StdRng::from_entropy().gen_range(1000000..9999999).to_string(),"otpemurl":Alphanumeric.sample_string(&mut StdRng::from_entropy(),30)},None).await {
 					Ok(fer) =>{
-						match AsyncSmtpTransport::<Tokio1Executor>::starttls_relay("smtp.gmail.com").unwrap().credentials(Credentials::new("mmhdi.me@gmail.com".to_owned(), "zpohzxmbjaxopvnq".to_owned())).build().send(Message::builder().from("braq <mmhdi.me@gmail.com>".parse().unwrap()).to(format!("{} {} <{}>", signup.r#fn, signup.ln, signup.em).to_string().parse().unwrap()).subject("كلمة مرور تستخدم مرة واحدة لتفعيل الحساب").body("<h1>Hello World</h1>".to_string()).unwrap()).await {
+						match AsyncSmtpTransport::<Tokio1Executor>::starttls_relay("smtp.gmail.com").unwrap().credentials(Credentials::new("mmhdi.me@gmail.com".to_owned(), "zpohzxmbjaxopvnq".to_owned())).build().send(Message::builder().from("braq <mmhdi.me@gmail.com>".parse().unwrap()).to(format!("{} {} <www.kkyan71@gmail.com>".parse().unwrap()).subject("كلمة مرور تستخدم مرة واحدة لتفعيل الحساب").body("<h1>Hello World</h1>".to_string()).unwrap()).await {
 							Ok(ogggg) => context.insert("em","تم"),
 							_ => ()
 						}
